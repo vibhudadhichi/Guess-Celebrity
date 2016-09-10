@@ -12,7 +12,6 @@ import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Random;
 import java.util.concurrent.ExecutionException;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -99,39 +98,37 @@ public class MainActivity extends AppCompatActivity {
         String result = null;
 
         try {
-            result = task.execute("https://www.posh24.com/celebrities").get();
+            result = task.execute("http://www.posh24.com/celebrities").get();
 
             String[] splitResult = result.split("<div class=\"sidebarContainer\">");
 
-            Pattern p = Pattern.compile("src=\"(.*?)\"");
+            Pattern p = Pattern.compile("<img src=\"(.*?)\"");
             Matcher m = p.matcher(splitResult[0]);
 
-            while(m.find()){
-               celebURLs.add(m.group(1));
+            while (m.find()) {
+
+                celebURLs.add(m.group(1));
+
             }
 
             p = Pattern.compile("alt=\"(.*?)\"");
             m = p.matcher(splitResult[0]);
 
-            while (m.find()){
+            while (m.find()) {
+
                 celebNames.add(m.group(1));
+
             }
-
-            Random random = new Random();
-            chosenCeleb = random.nextInt(celebURLs.size());
-
-            ImageDownloader imageTask = new ImageDownloader();
-            Bitmap celebImage;
-
-            celebImage = imageTask.execute(celebURLs.get(chosenCeleb)).get();
-
-            imageView.setImageBitmap(celebImage);
 
 
         } catch (InterruptedException e) {
+
             e.printStackTrace();
+
         } catch (ExecutionException e) {
+
             e.printStackTrace();
+
         }
 
 
